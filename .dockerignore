@@ -1,0 +1,6 @@
+# Exclude unnecessary files from the Docker build context
+venv/
+*.pyc
+__pycache__/
+*.log
+*.tmp

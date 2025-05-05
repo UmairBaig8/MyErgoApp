@@ -1,5 +1,5 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+# Use an official Python runtime as a parent image for building dependencies
+FROM python:3.11-slim AS builder
 
 # Set the working directory in the container
 WORKDIR /app
@@ -10,7 +10,14 @@ COPY requirements.txt .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code and assets into the container at /app
+# Use a minimal base image for the final build
+FROM python:3.11-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy only the necessary files from the builder stage
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY main.py .
 COPY assets/ /app/assets/
 
